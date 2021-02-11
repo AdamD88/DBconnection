@@ -10,9 +10,8 @@ con_DB = DBconnection()
 connect = con_DB.connection
 
 
-
 class Operations:
-    def __index__(self):
+    def __init__(self):
         pass
 
     def oneOption(self):
@@ -30,10 +29,10 @@ class Operations:
 
 
     def treeOption(self):
-        # old_FirstName = input("Input First Name to change: ")
+        LastName = input("Input Last Name what you looking for: ")
         new_FirstName = input("Input New First Name: ")
-        sql = "UPDATE Employees SET FirstName=(%s) WHERE id=2"
-        return cursor.execute(sql, new_FirstName)
+        sql = "UPDATE Employees SET FirstName=(%s) WHERE LastName=(%s)"
+        return cursor.execute(sql, (new_FirstName, LastName))
 
 
     def fourOption(self):
@@ -42,10 +41,19 @@ class Operations:
         b = cursor.fetchall()
         for _ in b:
             print(_)
-        return connect.commit()
 
-class Menu():
+    def checkTabelExists(self, tableName):
+        sql = "SHOW TABLES"
+        cursor.execute(sql)
+        tables = cursor.fetchall()
+        for (table_name,) in tables:
+            if table_name == tableName:
+                return table_name
+
+
+class Menu:
     def menuList(self):
+
         print("#" * 20)
         print("1. Add user.")
         print("2. Delete user.")
@@ -53,16 +61,30 @@ class Menu():
         print("4. Show all users.")
         print("5: Quit.")
         print("#" * 20)
+        # user_input = int(input("Pleas input what do your want to do: "))
+
+menu = Menu()
+operation = Operations()
 
 with connect:
     with connect.cursor() as cursor:
-        # sql = "CREATE TABLE Employees (id INT AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(30), LastName VARCHAR(30), DepartmentCode INT)"
-        menu = Menu()
-        menu.menuList()
-        operation = Operations()
-        user_input = int(input("Pleas input what do your want to do: "))
 
-        while user_input != 5:
+        work_table = input("Input name of table with you wont to work: ")
+        operation.checkTabelExists(work_table)
+
+        if operation.checkTabelExists(work_table):
+            menu.menuList()
+
+        else:
+            while operation.checkTabelExists(work_table) != work_table:
+                print("Your tabel not existe! Select another table")
+                work_table = input("Input name of table with you wont to work: ")
+                operation.checkTabelExists(work_table)
+                menu.menuList()
+
+        user_input = ""
+        while user_input != 0:
+            user_input = int(input("Pleas input what do your want to do: "))
             if user_input == 1:
                 operation.oneOption()
             elif user_input == 2:
@@ -71,9 +93,14 @@ with connect:
                 operation.treeOption()
             elif user_input == 4:
                 operation.fourOption()
+            elif user_input == 5:
+                print("Thank you for using this program Goodbye.")
+                break
+            else:
+                print("Option not existe!")
             menu.menuList()
-            user_input = int(input("Pleas input what do your want to do: "))
-    connect.commit()
+        connect.commit()
+
 
 
 
