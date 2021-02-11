@@ -61,6 +61,7 @@ class Menu:
         print("4. Show all users.")
         print("5: Quit.")
         print("#" * 20)
+        print()
         # user_input = int(input("Pleas input what do your want to do: "))
 
 menu = Menu()
@@ -82,7 +83,7 @@ with connect:
                 operation.checkTabelExists(work_table)
                 menu.menuList()
 
-        user_input = ""
+
         while user_input != 0:
             user_input = int(input("Pleas input what do your want to do: "))
             if user_input == 1:
@@ -99,6 +100,7 @@ with connect:
             else:
                 print("Option not existe!")
             menu.menuList()
+            user_input = int(input("Pleas input what do your want to do: "))
         connect.commit()
 
 
