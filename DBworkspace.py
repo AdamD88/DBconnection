@@ -52,6 +52,9 @@ class Operations:
 
 
 class Menu:
+    def __init__(self):
+        pass
+
     def menuList(self):
 
         print("#" * 20)
