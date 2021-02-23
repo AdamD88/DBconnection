@@ -1,5 +1,5 @@
 import pymysql.cursors
-
+from time import gmtime, strftime
 
 class DBconnection:
     def __init__(self):
@@ -9,22 +9,37 @@ con_DB = DBconnection()
 
 connect = con_DB.connection
 
+class logSave:
+
+
+    def save_to_file(self, conttent):
+        current_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        file = open("log_file.txt", "a")
+        file.write(conttent + " " + current_time + "\n")
+        file.close()
+
+log = logSave()
 
 class Operations:
     def __init__(self):
         pass
 
-    def oneOption(self):
+
+    def addEmployee(self):
         u_FirstName = input("Enter First name of user: ")
         u_LastName = input("Enter Last name of user: ")
         u_DepartmentCode = input("Enter Department Code of user: ")
         sql = "INSERT INTO Employees (FirstName, LastName, DepartmentCode) VALUES (%s, %s, %s)"
+        log.save_to_file(str(("INSERT INTO Employees FirstName- {} LastName- {} Department- {}".format(u_FirstName,\
+                             u_LastName, u_DepartmentCode))))
         return cursor.execute(sql, (u_FirstName, u_LastName, u_DepartmentCode))
 
     def twoOption(self):
         u_FirstName = input("Enter First name of user: ")
         u_LastName = input("Enter Last name of user: ")
         sql = "DELETE FROM Employees WHERE FirstName=(%s) AND LastName=(%s)"
+        log.save_to_file(str(("DELETE FROM Employees WHERE FirstName= {} AND LastName= {}}".format(u_FirstName,\
+                                                                                                   u_LastName))))
         return cursor.execute(sql, (u_FirstName, u_LastName))
 
 
@@ -39,6 +54,7 @@ class Operations:
         sql = "SELECT * FROM Employees"
         cursor.execute(sql)
         b = cursor.fetchall()
+        log.save_to_file("SELECT * FROM Employees")
         for _ in b:
             print(_)
 
@@ -65,7 +81,7 @@ class Menu:
         print("5: Quit.")
         print("#" * 20)
         print()
-        # user_input = int(input("Pleas input what do your want to do: "))
+
 
 menu = Menu()
 operation = Operations()
@@ -86,17 +102,21 @@ with connect:
                 operation.checkTabelExists(work_table)
                 menu.menuList()
 
-
+        user_input = int(input("Pleas input what do your want to do: "))
         while user_input != 0:
-            user_input = int(input("Pleas input what do your want to do: "))
+
             if user_input == 1:
-                operation.oneOption()
+                operation.addEmployee()
+                connect.commit()
             elif user_input == 2:
                 operation.twoOption()
+                connect.commit()
             elif user_input == 3:
                 operation.treeOption()
+                connect.commit()
             elif user_input == 4:
                 operation.fourOption()
+                connect.commit()
             elif user_input == 5:
                 print("Thank you for using this program Goodbye.")
                 break
@@ -104,7 +124,8 @@ with connect:
                 print("Option not existe!")
             menu.menuList()
             user_input = int(input("Pleas input what do your want to do: "))
-        connect.commit()
+
+
 
 
 

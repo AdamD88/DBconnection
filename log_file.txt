@@ -1,0 +1,7 @@
+SELECT * FROM Employees 2021-02-23 19:06:31
+INSERT INTO Employees FirstName- Jola LastName- Bobola Department- 1 2021-02-23 19:07:48
+SELECT * FROM Employees 2021-02-23 19:07:50
+SELECT * FROM Employees 2021-02-23 19:10:05
+INSERT INTO Employees FirstName- Franek LastName- Kaganek Department- 3 2021-02-23 19:10:17
+SELECT * FROM Employees 2021-02-23 19:10:18
+INSERT INTO Employees FirstName- Marta LastName- Karta Department- 2 2021-02-23 19:12:12
